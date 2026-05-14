@@ -1,0 +1,115 @@
+{
+  "common": {
+    "dashboard": "Dashboard",
+    "table": "Table",
+    "profile": "Profile",
+    "name": "Name",
+    "notification": "Notification",
+    "currency": "Currency",
+    "email": "Email",
+    "password": "Password",
+    "avatar": "Avatar",
+    "settings": "Settings",
+    "language": "Language",
+    "Russian": "Russian",
+    "English": "English",
+    "theme": "Theme",
+    "light": "Light",
+    "dark": "Dark",
+    "logout": "Logout",
+    "add": "Add",
+    "choose": "Choose",
+    "update": "Update",
+    "cancel": "Cancel",
+    "refresh": "Refresh",
+    "error": "Error",
+    "done": "Done",
+    "create_account": "Create account",
+    "login": "Login"
+  },
+  "index": {
+    "headline": "Subscription Manager",
+    "title": "Manage your tasks wisely",
+    "description": "A simple and powerful task manager that helps you focus on what matters most. Create, organize, and complete tasks—all in one place.",
+    "subscription": "To subscriptions",
+    "dashboard_title": "Dashboard – subscription analytics panel",
+    "dashboard_description": "A central screen for quick expense control and payment planning. All key metrics are gathered in one place.",
+    "dashboard_features": {
+      "first": {
+        "title": "Key metrics",
+        "description": "displays the total number of subscriptions, the most expensive subscription, and the average cost."
+      },
+      "second": {
+        "title": "Calendar with write-off amounts",
+        "description": "visualization of payments by days of the current month with indication of amounts."
+      },
+      "third": {
+        "title": "Annual expenditure schedule",
+        "description": "Line chart of monthly expenses and total for 12 months."
+      }
+    },
+    "table_title": "Subscriptions - manage subscriptions",
+    "table_description": "A complete list of all services with the ability to add, edit, and delete entries. Easy sorting and searching.",
+    "table_features": {
+      "first": {
+        "title": "Adding a new subscription",
+        "description": "form with fields: service, cost, currency, period (month/year), date of first write-off."
+      },
+      "second": {
+        "title": "Editing and deleting",
+        "description": "Linear editing or modal windows, database synchronization."
+      },
+      "third": {
+        "title": "Sorting and searching",
+        "description": "Quick filtering by name, price, period and next payment date."
+      }
+    },
+    "CTA": "Ready to stop subscription chaos?"
+  },
+  "dashboard": {
+    "card": {
+      "total": "Total subscriptions",
+      "most": "Most expensive",
+      "average": "Avg. per subscription"
+    },
+    "chart": {
+      "title": "Annual payments"
+    }
+  },
+  "table": {
+    "filterPlaceholder": "Filter service...",
+    "addButton": "Add subscription",
+    "form": {
+      "title": "New subscription",
+      "description": "Add new subscription on list"
+    },
+    "withdrawal_title": "Subscription add!",
+    "withdrawal_message": "Next withdrawal of {amount} on {date}",
+    "service": "Service",
+    "price": "Price",
+    "period": "Period",
+    "monthly": "Monthly",
+    "yearly": "Yearly",
+    "nextBilling": "Next billing",
+    "deleteTask": "Delete task"
+  },
+  "settings": {
+    "general": "General",
+    "security": "Security",
+    "avatar_description": "JPG, GIF or PNG. (1MB Max.)",
+    "name_description": "Will appear on self page.",
+    "notification_description": "Receive a email digest.",
+    "currency_description": "Used for totals and aggregate amounts.",
+    "email_description": "Used, to sign in, for email receipts.",
+    "password_description": "Confirm your current password before setting a new one.",
+    "password_current": "Current password",
+    "password_new": "New password",
+    "delete": "Delete",
+    "delete_account": "Delete account",
+    "delete_account_description": "Once you delete your account, there is no going back. Please be certain.",
+    "save_changes": "Save changes",
+    "general_success": "Changes done.",
+    "security_email_success": "Mail has been changed.",
+    "security_password_success": "Password changed."
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "name": "nuxt-todo",
+  "version": "1.0.0",
+  "description": "Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.",
+  "main": "Server.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "resolutions": {
+    "cookie": "0.6.0"
+  },
+  "dependencies": {
+    "@heroicons/vue": "^2.2.0",
+    "@nuxt/ui": "^4.4.0",
+    "@pinia/nuxt": "^0.11.3",
+    "@primeuix/themes": "^2.0.3",
+    "@primevue/nuxt-module": "^4.5.4",
+    "@supabase/ssr": "^0.8.0",
+    "@supabase/supabase-js": "^2.95.3",
+    "@unovis/ts": "^1.6.4",
+    "@unovis/vue": "^1.6.4",
+    "@vuepic/vue-datepicker": "^12.1.0",
+    "date-fns": "^4.1.0",
+    "express": "^5.2.1",
+    "motion-v": "^2.0.0-beta.4",
+    "nuxt": "^4.3.0",
+    "primeicons": "^7.0.0",
+    "primevue": "^4.5.4",
+    "sqlite3": "^5.1.7",
+    "vue": "^3.5.27",
+    "vue-router": "^4.6.4",
+    "vue3-select-component": "^0.16.0"
+  },
+  "devDependencies": {
+    "@nuxtjs/i18n": "^10.2.3",
+    "@nuxtjs/supabase": "^2.0.3",
+    "nuxt-echarts": "^1.0.1",
+    "supabase": "^2.98.2",
+    "tailwindcss": "^4.1.18"
+  }
+}
