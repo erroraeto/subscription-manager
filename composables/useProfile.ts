@@ -3,8 +3,6 @@ export const useProfile = () => {
     const isLoading = useState<boolean>('profile-loading', () => false)
     const error = useState<string | null>('profile-error', () => null)
 
-    const baseUrl = '/api/profile';
-
     const fetchProfile = async () => {
         isLoading.value = true;
         error.value = null;

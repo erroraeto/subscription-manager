@@ -1,4 +1,7 @@
 <script setup lang="ts">
+import {useProfile} from "~/composables/useProfile";
+
+const { changeName } = useProfile();
 const supabase = useSupabaseClient()
 const user = useSupabaseUser()
 const router = useRouter()
@@ -22,7 +25,6 @@ const handleSubmit = async (event: FormSubmitEvent<any>) => {
   if (!event) return
   loading.value = true
   error.value = ''
-  console.log(event.data.email)
 
   try {
     if (isLogin.value) {
@@ -32,12 +34,17 @@ const handleSubmit = async (event: FormSubmitEvent<any>) => {
       })
       if (signInError) throw signInError
     } else {
-      const { error: sugnUpError } = await supabase.auth.signUp({
+      const { data, error: sugnUpError } = await supabase.auth.signUp({
         email: event.data.email,
-        password: event.data.password
+        password: event.data.password,
+        options: { data: { username: event.data.name } }
       })
       if (sugnUpError) throw sugnUpError
-      alert('Registration successfully! Check your email.')
+      if (!data.session) {
+        error.value = 'Registration successfully! Check your email.';
+        isLogin.value = true;
+        return;
+      }
     }
     router.push('/')
   } catch (err: any) {
@@ -153,43 +160,6 @@ const fieldsSignup = ref<AuthFormField[]>([{
       </UAuthForm>
     </UPageCard>
   </div>
-<!--  <div class="flex-1 flex items-center justify-center p-4">-->
-<!--    <div class="auth-form max-w-md mx-auto p-6 bg-white rounded-lg shadow-md">-->
-<!--      <h3 class="text-xl font-bold mb-6 text-center text-gray-800">-->
-<!--        {{isLogin ? 'Вход' : 'Регистрация'}}-->
-<!--      </h3>-->
-<!--      <form @submit.prevent="handleSubmit" class="space-y-4">-->
-<!--        <input-->
-<!--            v-model="email"-->
-<!--            type="email"-->
-<!--            placeholder="Email"-->
-<!--            required-->
-<!--            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"-->
-<!--        />-->
-<!--        <input-->
-<!--            v-model="password"-->
-<!--            type="password"-->
-<!--            placeholder="Password"-->
-<!--            required-->
-<!--            class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"-->
-<!--        />-->
-<!--        <button-->
-<!--            type="submit"-->
-<!--            :disabled="loading"-->
-<!--            class="w-full py-2 px-4 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"-->
-<!--        >-->
-<!--          {{ loading ? 'Загрузка...' : (isLogin ? 'Войти' : 'Зарегистрироваться')}}-->
-<!--        </button>-->
-<!--      </form>-->
-<!--      <p v-if="error" class="text-red-600 text-sm text-center p-2 bg-red-50 rounded">{{error}}</p>-->
-<!--      <button-->
-<!--          @click="isLogin = !isLogin"-->
-<!--          class="w-full mt-4 text-blue-600 hover:text-blue-800 text-sm"-->
-<!--      >-->
-<!--        {{isLogin ? 'Нет аккаунта? Зарегистрироваться' : 'Уже есть аккаунт? Войти'}}-->
-<!--      </button>-->
-<!--    </div>-->
-<!--  </div>-->
 </template>
 
 <style scoped>
