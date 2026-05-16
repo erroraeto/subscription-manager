@@ -387,7 +387,7 @@ const formRef = useTemplateRef('formRef')
     <UCard
       :ui="{
         // root: 'flex flex-col h-full w-full shadow-lg',
-        root: 'flex flex-col max-h-full shadow-md',
+        root: 'flex flex-col max-h-full shadow-md h-full',
         header: 'flex items-center justify-between gap-1.5 p-3!',
         body: 'flex flex-1 p-0! overflow-auto',
         footer: 'p-3!',
@@ -534,6 +534,7 @@ const formRef = useTemplateRef('formRef')
         sticky
         :ui="{
           root: 'flex-1',
+          base: 'h-full',
           tbody: 'bg-elevated/50',
         }"
       />

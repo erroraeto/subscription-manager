@@ -20,11 +20,14 @@ const allTabs = computed<TabsItem[]>(() => [
 const itemsTabs = computed(() => allTabs.value.filter(tab => !tab.requiresAuth || user.value))
 const active = computed({
   get: () => {
+    const currPath = route.path
+    const tabsValue = itemsTabs.value.map(i => i.value)
+    const tab = tabsValue.includes(currPath) ? currPath : tabsValue[0] || '/'
     setTimeout(() => {
       isHydrated.value = true
-      index.value = route.path
+      index.value = tab
     }, 50)
-    return route.path
+    return tab
   },
   set: (val) => router.push(val)
 })
@@ -72,13 +75,13 @@ import {useCurrency} from "~/composables/useCurrency";
 const { setCurrency, currentCurrency } = useCurrency();
 const itemsMenu = computed<DropdownMenuItem[][]>(() => [
   [
-    {
-      label: $t('common.profile'),
-      icon: 'i-lucide-user',
-      onSelect() {
-        alert('Profile')
-      }
-    },
+    // {
+    //   label: $t('common.profile'),
+    //   icon: 'i-lucide-user',
+    //   onSelect() {
+    //     alert('Profile')
+    //   }
+    // },
     {
       label: $t('common.settings'),
       icon: 'i-lucide-cog',
@@ -234,18 +237,21 @@ const itemsMenu = computed<DropdownMenuItem[][]>(() => [
             }"
           />
         </UDropdownMenu>
-        <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">
-          <defs>
-            <filter id="fisheye" filterUnits="objectBoundingBox" primitiveUnits="objectBoundingBox" x="0" y="0" width="1" height="1">
-              <feImage preserveAspectRatio="none"
-                       href="/sphere.png"
-                       result="barrel"
-              />
-              <feDisplacementMap in2="barrel" in="SourceGraphic" xChannelSelector="R" yChannelSelector="G" scale=".15"/>
-              <feComposite operator="in" in2="barrel"/>
-            </filter>
-          </defs>
-        </svg>
+<!--        <svg style="position: absolute; width: 0; height: 0; overflow: hidden;" aria-hidden="true">-->
+<!--          <defs>-->
+<!--            <filter id="fisheye" filterUnits="objectBoundingBox" primitiveUnits="objectBoundingBox" x="0" y="0" width="1" height="1">-->
+<!--              <feImage preserveAspectRatio="none"-->
+<!--                       href="/sphere.png"-->
+<!--                       result="barrel"-->
+<!--              />-->
+<!--              <feDisplacementMap in2="barrel" in="SourceGraphic" xChannelSelector="R" yChannelSelector="G" scale=".15"/>-->
+<!--              <feComposite operator="in" in2="barrel"/>-->
+<!--            </filter>-->
+<!--          </defs>-->
+<!--        </svg>-->
+<!--          :deep(.fisheye-avatar) {-->
+<!--            filter: url(#fisheye);-->
+<!--          }-->
 
         <Settings v-model:open="isSettingsModalOpen" />
       </div>
@@ -271,7 +277,4 @@ const itemsMenu = computed<DropdownMenuItem[][]>(() => [
 </template>
 
 <style scoped>
-:deep(.fisheye-avatar) {
-  filter: url(#fisheye);
-}
 </style>
