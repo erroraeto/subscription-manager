@@ -13,9 +13,44 @@ const isLogin = ref(true)
 const loading = ref(false)
 const error = ref('')
 
+const isWaiting = ref(false)
+const registrationEmail = ref('')
+let authListener: any = null
+
 onMounted(() => {
   if (route.query.register === 'true') {
     isLogin.value = false
+  }
+
+  if (import.meta.client) {
+    const savedWaiting = sessionStorage.getItem('is_waiting_confirm')
+    const savedEmail = sessionStorage.getItem('awaiting_email')
+
+    if (savedWaiting === 'true' && savedEmail) {
+      isWaiting.value = true
+      registrationEmail.value = savedEmail
+      error.value = `A confirmation email has been sent to ${savedEmail}.\nFollow the link, then log in.`
+    }
+  }
+
+  const { data } = supabase.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_IN' && session) {
+      sessionStorage.removeItem('is_waiting_confirm')
+      sessionStorage.removeItem('awaiting_email')
+
+      isWaiting.value = false
+      loading.value = false
+
+      router.push('/')
+    }
+  })
+
+  authListener = data.subscription
+})
+
+onUnmounted(() => {
+  if (authListener) {
+    authListener.unsubscribe()
   }
 })
 
@@ -41,8 +76,13 @@ const handleSubmit = async (event: FormSubmitEvent<any>) => {
       })
       if (sugnUpError) throw sugnUpError
       if (!data.session) {
-        error.value = 'Registration successfully! Check your email.';
-        isLogin.value = true;
+        isWaiting.value = true
+        registrationEmail.value = event.data.email
+        error.value = `A confirmation email has been sent to ${event.data.email}.\nFollow the link, then log in.`;
+
+        sessionStorage.setItem('is_waiting_confirm', 'true')
+        sessionStorage.setItem('awaiting_email', event.data.email)
+
         return;
       }
     }
@@ -54,7 +94,13 @@ const handleSubmit = async (event: FormSubmitEvent<any>) => {
   }
 }
 
-
+const cancelWaiting = () => {
+  sessionStorage.removeItem('is_awaiting_confirm')
+  sessionStorage.removeItem('awaiting_email')
+  isWaiting.value = false
+  isLogin.value = true
+  error.value = ''
+}
 
 
 
@@ -110,54 +156,76 @@ const fieldsSignup = ref<AuthFormField[]>([{
       variant="subtle"
       class="w-full max-w-md"
     >
-      <UAuthForm
-        v-if="isLogin"
-        title="Welcome back"
-        :fields="fieldsLogin"
-        icon="custom:logo"
-        :ui="{
+      <template v-if="isWaiting">
+        <UAuthForm
+          title="Confirm"
+          :description="error"
+          icon="custom:logo"
+          :ui="{
+            leadingIcon: 'size-14 text-primary',
+            description: 'whitespace-pre-line',
+            body: 'hidden'
+        }"
+          class="max-w-md"
+        >
+          <template #footer>
+            <UButton
+              @click="cancelWaiting"
+              label="Cancel & Back to Login"
+            />
+          </template>
+        </UAuthForm>
+      </template>
+      <template v-else>
+        <UAuthForm
+            v-if="isLogin"
+            title="Welcome back"
+            :fields="fieldsLogin"
+            icon="custom:logo"
+            :ui="{
           leadingIcon: 'size-14 text-primary'
         }"
-        class="max-w-md"
-        @submit="handleSubmit"
-      >
-        <template #description>
-          Don't have an account? <ULink
-            to="#"
-            @click.prevent="isLogin = false"
-            class="text-primary font-medium"
+            class="max-w-md"
+            @submit="handleSubmit"
+        >
+          <template #description>
+            Don't have an account? <ULink
+              to="#"
+              @click.prevent="isLogin = false"
+              class="text-primary font-medium"
           >Sign up</ULink>.
-        </template>
+          </template>
 
-        <template #password-hint>
-          <ULink
-            to=""
-            class="text-primary font-medium"
-            tabindex="-1"
-          >Forgot password?</ULink>
-        </template>
-      </UAuthForm>
+          <template #password-hint>
+            <ULink
+                to=""
+                class="text-primary font-medium"
+                tabindex="-1"
+            >Forgot password?</ULink>
+          </template>
+        </UAuthForm>
 
-      <UAuthForm
-        v-else
-        title="Create an account"
-        :submit="{ label: 'Create account' }"
-        :fields="fieldsSignup"
-        icon="custom:logo"
-        :ui="{
+        <UAuthForm
+            v-else
+            title="Create an account"
+            :submit="{ label: 'Create account' }"
+            :fields="fieldsSignup"
+            icon="custom:logo"
+            :ui="{
           leadingIcon: '-my-3 size-14 text-primary'
         }"
-        class="max-w-md"
-        @submit="handleSubmit"
-      >
-        <template #description>
-          Already have an account? <ULink
-            to="#"
-            @click.prevent="isLogin = true"
-            class="text-primary font-medium"
+            class="max-w-md"
+            @submit="handleSubmit"
+        >
+          <template #description>
+            Already have an account? <ULink
+              to="#"
+              @click.prevent="isLogin = true"
+              class="text-primary font-medium"
           >Login</ULink>.
-        </template>
-      </UAuthForm>
+          </template>
+        </UAuthForm>
+      </template>
     </UPageCard>
   </div>
 </template>

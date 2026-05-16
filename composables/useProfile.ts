@@ -183,8 +183,12 @@ export const useProfile = () => {
         }
     }
 
+    const user = useSupabaseUser();
+
     onMounted(() => {
-        fetchProfile()
+        if (user.value) {
+            fetchProfile()
+        }
     })
 
     return {
