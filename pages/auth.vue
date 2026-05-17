@@ -119,7 +119,7 @@ import type { AuthFormField } from '@nuxt/ui'
 
 const fieldsLogin = ref<AuthFormField[]>([{
     name: 'email',
-    type: 'text',
+    type: 'email',
     label: 'Email'
   },
   {
@@ -134,18 +134,18 @@ const fieldsLogin = ref<AuthFormField[]>([{
 
 const fieldsSignup = ref<AuthFormField[]>([{
     name: 'name',
-    type: 'text' as const,
+    type: 'text',
     label: 'Name',
     placeholder: 'Enter your name'
   }, {
     name: 'email',
-    type: 'text' as const,
+    type: 'email',
     label: 'Email',
     placeholder: 'Enter your email'
   }, {
     name: 'password',
+    type: 'password',
     label: 'Password',
-    type: 'password' as const,
     placeholder: 'Enter your password'
 }])
 </script>

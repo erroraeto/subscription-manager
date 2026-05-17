@@ -186,7 +186,7 @@ const itemsMenu = computed<DropdownMenuItem[][]>(() => [
 </script>
 
 <template>
-  <UHeader :toggle="false" >
+  <UHeader :toggle="false" class="fixed w-full">
     <template #left>
       <UTabs
         v-model="active"

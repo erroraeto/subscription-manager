@@ -29,12 +29,21 @@ useSeoMeta({
   ogTitle: title,
   ogDescription: description
 })
+
+import eruda from 'eruda';
+
+onMounted(async () => {
+  if (process.env.NODE_ENV === 'development') {
+    const eruda = await import('eruda');
+    eruda.default.init();
+  }
+});
 </script>
 
 <template>
   <UApp :locale="locales[locale]">
     <Navigation/>
-    <UMain class="flex justify-center inset-0">
+    <UMain class="flex justify-center mt-[var(--ui-header-height)] min-h-[calc(100svh-var(--ui-header-height))]">
       <NuxtPage />
     </UMain>
   </UApp>

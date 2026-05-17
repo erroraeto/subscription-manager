@@ -191,6 +191,7 @@ const chartSettings = computed<ECOption>(() => {
     },
     tooltip: {
       trigger: 'axis',
+      triggerOn: 'none',
       axisPointer: {
         axis: 'x',
         type: 'line',
@@ -275,6 +276,53 @@ const chartSettings = computed<ECOption>(() => {
     }
   })
 });
+
+
+
+const isTracking = ref(false)
+let pressTimer: any = null
+
+const onTouchStart = (e: TouchEvent) => {
+  pressTimer = setTimeout(() => {
+    isTracking.value = true
+    const rect = chartRef.value?.getDom().getBoundingClientRect();
+    const touch = e.touches[0];
+    chartRef.value?.dispatchAction({
+      type: 'showTip',
+      x: touch?.clientX - rect.left,
+      y: touch?.clientY - rect.top,
+    });
+  }, 150)
+}
+
+const onTouchMove = (e: TouchEvent) => {
+  if (!isTracking.value) {
+    clearTimeout(pressTimer)
+  } else {
+    e.preventDefault();
+    const target = e.currentTarget as HTMLElement
+    if (target) target.style.touchAction = 'none'
+    const rect = chartRef.value?.getDom().getBoundingClientRect();
+    const touch = e.touches[0];
+    chartRef.value?.dispatchAction({
+      type: 'showTip',
+      x: touch?.clientX - rect.left,
+      y: touch?.clientY - rect.top,
+    });
+  }
+}
+
+const onTouchEnd = (e: TouchEvent) => {
+  clearTimeout(pressTimer)
+  const target = e.currentTarget as HTMLElement
+  if (target) target.style.touchAction = ''
+  isTracking.value = false
+  chartRef.value?.dispatchAction({ type: 'hideTip' })
+  chartRef.value?.dispatchAction({
+    type: 'updateAxisPointer',
+    currTrigger: 'leave'
+  })
+}
 
 </script>
 
@@ -428,29 +476,37 @@ const chartSettings = computed<ECOption>(() => {
       </template>
       <template #description>
         <ClientOnly>
-          <VChart
-            ref="chartRef"
-            class="w-full h-full"
-            :option="chartSettings"
-            :init-options="{ renderer: 'svg' }"
-            autoresize
+          <div
+            class="w-full h-full select-none"
+            @touchstart="onTouchStart"
+            @touchmove="onTouchMove"
+            @touchend="onTouchEnd"
+            @touchcancel="onTouchEnd"
           >
-            <template #tooltip="params">
-              <div
-                class="flex flex-col items-center rounded-md ring ring-muted/70 bg-elevated/70 backdrop-blur-xs divide-y divide-muted/70 shadow-sm overflow-hidden"
-              >
-                <span class="px-3 py-1 font-sans font-normal text-muted text-xs uppercase">{{ params[0].name }}</span>
-                <span class="px-3 pt-0.5 pb-1 font-sans font-medium text-primary text-base">{{
-                  new Intl.NumberFormat(locale, {
-                    style: 'currency',
-                    currency: profile?.preferred_currency ?? 'RUB',
-                    minimumFractionDigits: 0,
-                    maximumFractionDigits: 2,
-                  }).format(params[0].value)
-                }}</span>
-              </div>
-            </template>
-          </VChart>
+            <VChart
+              ref="chartRef"
+              class="w-full h-full"
+              :option="chartSettings"
+              :init-options="{ renderer: 'svg' }"
+              autoresize
+            >
+              <template #tooltip="params">
+                <div
+                  class="flex flex-col items-center rounded-md ring ring-muted/70 bg-elevated/70 backdrop-blur-xs divide-y divide-muted/70 shadow-sm overflow-hidden"
+                >
+                  <span class="px-3 py-1 font-sans font-normal text-muted text-xs uppercase">{{ params[0].name }}</span>
+                  <span class="px-3 pt-0.5 pb-1 font-sans font-medium text-primary text-base">{{
+                    new Intl.NumberFormat(locale, {
+                      style: 'currency',
+                      currency: profile?.preferred_currency ?? 'RUB',
+                      minimumFractionDigits: 0,
+                      maximumFractionDigits: 2,
+                    }).format(params[0].value)
+                  }}</span>
+                </div>
+              </template>
+            </VChart>
+          </div>
         </ClientOnly>
 <!--        <UPopover-->
 <!--          arrow-->

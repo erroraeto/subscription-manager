@@ -30,6 +30,7 @@
     "@unovis/vue": "^1.6.4",
     "@vuepic/vue-datepicker": "^12.1.0",
     "date-fns": "^4.1.0",
+    "eruda": "^3.4.3",
     "express": "^5.2.1",
     "motion-v": "^2.0.0-beta.4",
     "nuxt": "^4.3.0",

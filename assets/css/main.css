@@ -30,13 +30,28 @@
 @theme {
 }
 
-html {
+html, body {
+    scrollbar-color: var(--ring-color-accented) var(--background-color-default);
+    width: 100%;
+    /*height: 100dvh;*/
+    /*overflow: hidden;*/
+    /*overscroll-behavior: none;*/
+}
+
+#__nuxt {
+    width: 100%;
+    /*height: 100%;*/
+    /*overflow-y: auto;*/
+    /*overscroll-behavior-y: none;*/
+    /*-webkit-overflow-scrolling: touch;*/
     scrollbar-color: var(--ring-color-accented) var(--background-color-default);
 }
 
-body {
-    /*background-color: var(--background-color-muted);*/
-}
+/*body {*/
+/*    !*overflow: hidden;*!*/
+/*    !*overscroll-behavior: none;*!*/
+/*    !*background-color: var(--background-color-muted);*!*/
+/*}*/
 
 .water-pattern {
     box-shadow:

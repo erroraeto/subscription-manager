@@ -533,7 +533,7 @@ const formRef = useTemplateRef('formRef')
         loading-animation="carousel"
         sticky
         :ui="{
-          root: 'flex-1',
+          root: 'flex-1 overscroll-none',
           base: 'h-full',
           tbody: 'bg-elevated/50',
         }"

@@ -85,9 +85,7 @@ const itemsTable = [
 </script>
 
 <template>
-  <div
-      class="flex-1"
-  >
+  <div class="flex-1 w-full">
     <UPageHero
       :headline="$t('index.headline')"
       :title="$t('index.title')"
