@@ -148,7 +148,10 @@ const chartData = computed(() => {
 
 const chartRef = ref<EChartsType | null>(null);
 const colorMode = useColorMode();
-
+const isMobile = ref(false)
+onMounted(() => {
+  isMobile.value = window.matchMedia('(pointer: coarse)').matches
+})
 const chartOption = computed(() => ({
   theme: currentTheme.value,
   currency: currentCurrency.value ?? 'RUB',
@@ -191,7 +194,7 @@ const chartSettings = computed<ECOption>(() => {
     },
     tooltip: {
       trigger: 'axis',
-      triggerOn: 'none',
+      triggerOn: isMobile.value ? 'none' : 'mousemove',
       axisPointer: {
         axis: 'x',
         type: 'line',
@@ -478,10 +481,10 @@ const onTouchEnd = (e: TouchEvent) => {
         <ClientOnly>
           <div
             class="w-full h-full select-none"
-            @touchstart="onTouchStart"
-            @touchmove="onTouchMove"
-            @touchend="onTouchEnd"
-            @touchcancel="onTouchEnd"
+            @touchstart="isMobile ? onTouchStart($event) : null"
+            @touchmove="isMobile ? onTouchMove($event) : null"
+            @touchend="isMobile ? onTouchEnd($event) : null"
+            @touchcancel="isMobile ? onTouchEnd($event) : null"
           >
             <VChart
               ref="chartRef"

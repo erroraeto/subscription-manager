@@ -232,7 +232,7 @@ const itemsMenu = computed<DropdownMenuItem[][]>(() => [
               base: 'flex items-center justify-center w-8 h-8 p-0 rounded-full ' +
                 'transition-all duration-300 ease-out water-pattern shadow-md ' +
                 'active:scale-110 will-change-transform',
-              leadingAvatar: 'fisheye-avatar size-full mix-blend-screen ',
+              leadingAvatar: `${profile?.avatar_url ? '' : 'hidden'} fisheye-avatar size-full mix-blend-screen`,
               label: `${profile?.avatar_url ? 'hidden' : ''} mb-[1px] uppercase text-sm font-semibold text-primary-500`,
             }"
           />

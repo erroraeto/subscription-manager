@@ -3,6 +3,7 @@ import * as locales from '@nuxt/ui/locale'
 import {useLanguage} from "~/composables/useLanguage";
 const { locale } = useI18n()
 const colorMode = useColorMode()
+const route = useRoute()
 
 const color = computed(() => colorMode.value === 'dark' ? '#1b1718' : 'white')
 
@@ -29,20 +30,12 @@ useSeoMeta({
   ogTitle: title,
   ogDescription: description
 })
-
-import eruda from 'eruda';
-
-onMounted(async () => {
-  if (process.env.NODE_ENV === 'development') {
-    const eruda = await import('eruda');
-    eruda.default.init();
-  }
-});
+const showNavigation = computed(() => !route.meta.hideNavigation)
 </script>
 
 <template>
   <UApp :locale="locales[locale]">
-    <Navigation/>
+    <Navigation v-if="showNavigation"/>
     <UMain class="flex justify-center mt-[var(--ui-header-height)] min-h-[calc(100svh-var(--ui-header-height))]">
       <NuxtPage />
     </UMain>

@@ -30,6 +30,21 @@ export default defineAppConfig({
                 }
             }
         },
+        pageSection: {
+            slots: {
+                title: 'text-2xl sm:text-4xl lg:text-5xl text-pretty tracking-tight font-bold text-highlighted',
+                description: 'text-sm sm:text-lg text-muted mt-4! sm:mt-6!',
+                body: 'mt-6! sm:mt-8!',
+                features: 'gap-3! sm:gap-4!'
+            },
+        },
+        pageFeature: {
+            slots: {
+                leadingIcon: 'size-4 sm:size-5 shrink-0 text-primary',
+                title: 'text-[15px] sm:text-base text-pretty font-semibold text-highlighted',
+                description: 'text-sm sm:text-[15px] text-pretty text-muted mt-0.5! sm:mt-1!'
+            },
+        },
         card: {
             slots: {
                 root: 'rounded-md'
