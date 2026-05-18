@@ -14,5 +14,7 @@ export default defineEventHandler(async (event) => {
     const { error } = await supabaseAdmin.auth.admin.deleteUser(user.id)
     if (error) throw createError({status: 500, message: error.message})
 
+    await supabase.auth.signOut()
+
     return { success: true }
 })

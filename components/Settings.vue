@@ -141,6 +141,10 @@ async function submitPassword(event: FormSubmitEvent<any>) {
     icon: 'i-lucide-key-round',
   })
 }
+
+async function deleteHandler(event: FormSubmitEvent<any>) {
+  await deleteProfile()
+}
 </script>
 
 <template>
@@ -328,7 +332,7 @@ async function submitPassword(event: FormSubmitEvent<any>) {
                 :label="$t('settings.delete')"
                 variant="subtle"
                 color="error"
-                @click="deleteProfile()"
+                @click="deleteHandler"
               />
             </template>
           </UPageCard>
