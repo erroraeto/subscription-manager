@@ -178,15 +178,18 @@ const fieldsSignup = ref<AuthFormField[]>([{
       </template>
       <template v-else>
         <UAuthForm
-            v-if="isLogin"
-            title="Welcome back"
-            :fields="fieldsLogin"
-            icon="custom:logo"
-            :ui="{
-          leadingIcon: 'size-14 text-primary'
-        }"
-            class="max-w-md"
-            @submit="handleSubmit"
+          v-if="isLogin"
+          title="Welcome back"
+          :fields="fieldsLogin"
+          icon="custom:logo"
+          :ui="{
+            leadingIcon: 'size-14 text-primary'
+          }"
+          class="max-w-md"
+          :submit="{
+            loading: loading
+          }"
+          @submit="handleSubmit"
         >
           <template #description>
             Don't have an account? <ULink
@@ -206,16 +209,19 @@ const fieldsSignup = ref<AuthFormField[]>([{
         </UAuthForm>
 
         <UAuthForm
-            v-else
-            title="Create an account"
-            :submit="{ label: 'Create account' }"
-            :fields="fieldsSignup"
-            icon="custom:logo"
-            :ui="{
-          leadingIcon: '-my-3 size-14 text-primary'
-        }"
-            class="max-w-md"
-            @submit="handleSubmit"
+          v-else
+          title="Create an account"
+          :fields="fieldsSignup"
+          icon="custom:logo"
+          :ui="{
+            leadingIcon: '-my-3 size-14 text-primary'
+          }"
+          class="max-w-md"
+          :submit="{
+            label: 'Create account',
+            loading: loading
+          }"
+          @submit="handleSubmit"
         >
           <template #description>
             Already have an account? <ULink
