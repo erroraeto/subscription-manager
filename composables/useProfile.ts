@@ -12,9 +12,6 @@ export const useProfile = () => {
             profile.value = data
         } catch (err: any) {
             error.value = err.data?.message || 'Error fetching profile';
-            if (err.response?.status === 401) {
-                navigateTo('/auth')
-            }
         } finally {
             isLoading.value = false;
         }

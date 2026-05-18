@@ -1,5 +1,8 @@
 export default defineNuxtConfig({
     compatibilityDate: '2025-07-15',
+    router: {
+        middleware: ['auth']
+    },
     devtools: { enabled: true },
     devServer: {
         host: '0.0.0.0'
@@ -30,8 +33,8 @@ export default defineNuxtConfig({
     supabase: {
         redirect: false,
         cookieOptions: {
-            sameSite: 'lax',   // или 'none' (тогда нужно secure: true)
-            secure: false,     // только для разработки по HTTP
+            sameSite: 'lax',
+            secure: true,
         }
     },
     i18n: {

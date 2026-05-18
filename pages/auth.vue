@@ -13,7 +13,7 @@ const isLogin = ref(true)
 const loading = ref(false)
 const error = ref('')
 
-const isWaiting = ref(false)
+const isWaiting = ref(route.query.isWaiting === 'true')
 const registrationEmail = ref('')
 let authListener: any = null
 
