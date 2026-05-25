@@ -1,75 +1,34 @@
-# Nuxt Minimal Starter
+# 💳 SubTrack — Subscription Management Dashboard
 
-Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+[![Nuxt](https://img.shields.io/badge/Nuxt-4-green)](https://nuxt.com/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue)](https://www.typescriptlang.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-Backend-green)](https://supabase.com/)
+[![Resend](https://img.shields.io/badge/Resend-Email-black)](https://resend.com/)
 
-## Setup
+**SubTrack** — это веб-приложение для отслеживания подписок и регулярных платежей. Приложение помогает контролировать расходы, отслеживать активные подписки и получать уведомления перед списанием средств.
 
-Make sure to install dependencies:
+## 🌟 Особенности
 
-```bash
-# npm
-npm install
+- **📊 Дашборд** — обзор основных метрик и ежемесячных расходов
+- **📈 Графики аналитики** — визуализация расходов по месяцам и суммарный расход на год
+- **📋 Таблица подписок** — удобное управление активными сервисами
+- **🔔 Уведомления об оплате** — email-напоминания перед списанием средств
+- **🎨 Настройка интерфейса** — выбор темы, языка и валюты
+- **📱 Адаптивный интерфейс** — поддержка мобильных устройств и десктопов
 
-# pnpm
-pnpm install
+## 🚀 Технологический стек
 
-# yarn
-yarn install
+**Фронтенд:**
 
-# bun
-bun install
-```
+- Nuxt + TypeScript
+- TailwindCSS + Nuxt UI
+- Apache ECharts
 
-## Development Server
+**Бэкенд/Сервисы:**
 
-Start the development server on `http://localhost:3000`:
+- Supabase (Auth, Database, Edge Functions, Storage)
+- Resend (email-уведомления)
 
-```bash
-# npm
-npm run dev
+## 🖼️ Основной интерфейс
 
-# pnpm
-pnpm dev
-
-# yarn
-yarn dev
-
-# bun
-bun run dev
-```
-
-## Production
-
-Build the application for production:
-
-```bash
-# npm
-npm run build
-
-# pnpm
-pnpm build
-
-# yarn
-yarn build
-
-# bun
-bun run build
-```
-
-Locally preview production build:
-
-```bash
-# npm
-npm run preview
-
-# pnpm
-pnpm preview
-
-# yarn
-yarn preview
-
-# bun
-bun run preview
-```
-
-Check out the [deployment documentation](https://nuxt.com/docs/getting-started/deployment) for more information.
+![Скриншоты](./docs/images/screenshot.png)
