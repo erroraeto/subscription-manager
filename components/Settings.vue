@@ -183,8 +183,9 @@ async function deleteHandler(event: FormSubmitEvent<any>) {
                 :help="$t('settings.avatar_description')"
                 :style="{ '--avatar-url': `url(${profileForm.avatar})` }"
                 :ui="{
+                  root: 'flex justify-between',
                   container: 'flex flex-col',
-                  help: 'w-30'
+                  help: 'w-30 sm:block hidden'
                 }"
               >
                 <UFileUpload
@@ -208,11 +209,10 @@ async function deleteHandler(event: FormSubmitEvent<any>) {
                   name="name"
                   :label="$t('common.name')"
                   :description="$t('settings.name_description')"
-                  required
                   :ui="{
-                    description: 'max-w-2xl'
+                    description: 'max-w-2xl sm:contents hidden'
                   }"
-                  class="flex max-sm:flex-col justify-between items-center gap-4"
+                  class="flex justify-between items-center gap-4"
                 >
                   <UInput
                     v-model="profileForm.name"
@@ -223,11 +223,10 @@ async function deleteHandler(event: FormSubmitEvent<any>) {
                   name="notification"
                   :label="$t('common.notification')"
                   :description="$t('settings.notification_description')"
-                  required
                   :ui="{
-                    description: 'max-w-2xl'
+                    description: 'max-w-2xl sm:contents hidden'
                   }"
-                  class="flex max-sm:flex-col justify-between items-center gap-4"
+                  class="flex justify-between items-center gap-4"
                 >
                   <USwitch
                     v-model="profileForm.notification"
@@ -239,7 +238,7 @@ async function deleteHandler(event: FormSubmitEvent<any>) {
               :label="$t('settings.save_changes')"
               type="submit"
               variant="subtle"
-              class="w-fit lg:ms-auto"
+              class="w-fit lg:ms-auto self-end"
             />
           </UForm>
         </template>
