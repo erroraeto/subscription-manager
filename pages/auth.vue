@@ -57,7 +57,10 @@ const handleSignIn = async (event: FormSubmitEvent<any>) => {
   try {
     const { error: signInError } = await supabase.auth.signInWithPassword({
       email: event.data.email,
-      password: event.data.password
+      password: event.data.password,
+      options: {
+        expiresIn: event.data.remember ? 60 * 60 * 24 * 30 : 60 * 60 * 24
+      }
     })
     if (signInError) throw signInError
     router.push('/')
@@ -91,7 +94,8 @@ const handleSignUp = async (event: FormSubmitEvent<any>) => {
 }
 
 const handleVerifyOtp = async () => {
-  if (!otpForm.code || otpForm.code.length < 6) {
+  const codeString = Array.isArray(otpForm.code) ? otpForm.code.join('') : otpForm.code
+  if (!codeString || codeString.length < 8) {
     error.value = 'Please enter a valid 6-digit code'
     return
   }
@@ -102,7 +106,7 @@ const handleVerifyOtp = async () => {
   try {
     const { error: otpError } = await supabase.auth.verifyOtp({
       email: registrationEmail.value,
-      token: otpForm.code,
+      token: codeString,
       type: 'signup'
     })
     if (otpError) throw otpError
@@ -198,7 +202,7 @@ const backToLogin = () => {
           </div>
 
           <UFormField name="code">
-            <UPinInput v-model="otpForm.code" :length="6" />
+            <UPinInput v-model="otpForm.code" :length="8" />
           </UFormField>
           <div class="flex items-center gap-x-2">
             <UButton
