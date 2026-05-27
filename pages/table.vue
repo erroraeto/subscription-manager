@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { h, resolveComponent } from 'vue'
 import type { TableColumn } from '@nuxt/ui'
+import { useSortable } from '@vueuse/integrations/useSortable'
 import { addMonths, addYears, format, setHours } from 'date-fns';
 import {useProtectedSubscriptions} from '~/composables/useProtectedSubscriptions';
 import type { UForm } from '#components'
@@ -46,6 +47,8 @@ const UBadge = resolveComponent('UBadge')
 const UButton = resolveComponent('UButton')
 
 const table = useTemplateRef('table')
+const sorting = ref([])
+const isDragging = ref(false)
 
 type Payment = {
   id: number
@@ -76,7 +79,7 @@ const columns: TableColumn<Payment>[] = [
           : 'i-lucide-chevrons-up-down',
         // class: '-mx-2.5',
         ui: {
-          base: 'justify-between w-full',
+          base: 'justify-between w-full bg-elevated/50',
           label: 'w-full text-left',
           trailingIcon: 'size-3 mt-0.5 p-1.5',
         },
@@ -107,7 +110,7 @@ const columns: TableColumn<Payment>[] = [
           : 'i-lucide-chevrons-up-down',
         // class: '-mx-2.5',
         ui: {
-          base: 'justify-between w-full',
+          base: 'justify-between w-full bg-elevated/50',
           label: 'w-full text-left',
           trailingIcon: 'size-3 mt-0.5 p-1.5',
         },
@@ -137,12 +140,21 @@ const columns: TableColumn<Payment>[] = [
           : 'i-lucide-chevrons-up-down',
         // class: '-mx-2.5',
         ui: {
-          base: 'justify-between w-full',
+          base: 'justify-between w-full bg-elevated/50',
           label: 'w-full text-left',
           trailingIcon: 'size-3 mt-0.5 p-1.5',
         },
         onClick: () => column.toggleSorting(column.getIsSorted() === 'asc')
       })
+    },
+    sortingFn: (rowA, rowB, columnId) => {
+      const valA = rowA.getValue(columnId) as { price: string | number | null };
+      const valB = rowB.getValue(columnId) as { price: string | number | null };
+
+      const numA = valA?.price ? Number.parseFloat(valA.price.toString()) : 0;
+      const numB = valB?.price ? Number.parseFloat(valB.price.toString()) : 0;
+
+      return numA - numB;
     },
     cell: ({ row }) => {
       const data = row.getValue('amount') as {price: string, currency: string};
@@ -178,7 +190,7 @@ const columns: TableColumn<Payment>[] = [
           : 'i-lucide-chevrons-up-down',
         // class: '-mx-2.5',
         ui: {
-          base: 'justify-between w-full',
+          base: 'justify-between w-full bg-elevated/50',
           label: 'w-full text-left',
           trailingIcon: 'size-3 mt-0.5 p-1.5',
         },
@@ -218,7 +230,7 @@ const columns: TableColumn<Payment>[] = [
           : 'i-lucide-chevrons-up-down',
         // class: '-mx-2.5',
         ui: {
-          base: 'justify-between w-full',
+          base: 'justify-between w-full bg-elevated/50',
           label: 'w-full text-left',
           trailingIcon: 'size-3 mt-0.5 p-1.5',
         },
@@ -272,7 +284,15 @@ const columns: TableColumn<Payment>[] = [
   }
 ]
 
-const data = computed(() => {
+const sourceData = ref<Payment[]>([])
+
+watch(subscriptions, (newSubs) => {
+  if (!newSubs) {
+    sourceData.value = []
+    return
+  }
+  if (isDragging.value) return
+
   if (!subscriptions.value) return [];
   const mapped = subscriptions.value.map((sub, id, arr) => {
     let date = new Date(sub.next_billing_date);
@@ -308,9 +328,45 @@ const data = computed(() => {
       return b.displayID - a.displayID;
     });
   }
-  return mapped
+
+  sourceData.value = mapped
+}, { immediate: true, deep: true })
+
+const data = computed({
+  get: () => sourceData.value,
+  set: (newOrder) => {
+    if (!subscriptions.value) return;
+
+    const updatedSubscriptions = newOrder.map(paymentItem => {
+      return subscriptions.value!.find(sub => sub.id === paymentItem.id);
+    }).filter(Boolean);
+
+    subscriptions.value = updatedSubscriptions;
+  }
 });
 
+useSortable('.my-table-tbody', data, {
+  animation: 150,
+  onStart() {
+    isDragging.value = true
+    sorting.value = []
+  },
+  onUpdate(e) {
+    const { oldIndex, newIndex } = e;
+    if (oldIndex === undefined || newIndex === undefined || oldIndex === newIndex) return;
+
+    const updatedList = [...data.value];
+    const [movedItem] = updatedList.splice(oldIndex, 1);
+    updatedList.splice(newIndex, 0, movedItem);
+
+    data.value = updatedList;
+  },
+  onEnd() {
+    nextTick(() => {
+      isDragging.value = false
+    })
+  }
+})
 
 const toast = useToast()
 function showToast(props: any) {
@@ -382,15 +438,13 @@ const formRef = useTemplateRef('formRef')
 </script>
 
 <template>
-<!--  <div class="flex-1 flex m-4 lg:ml-0 rounded-lg ring ring-default bg-default/75 shadow min-w-0">-->
   <div class="flex-1 p-4 max-h-[calc(100svh-var(--ui-header-height))] max-w-full">
     <UCard
       :ui="{
-        // root: 'flex flex-col h-full w-full shadow-lg',
-        root: 'flex flex-col max-h-full shadow-md h-full',
-        header: 'flex items-center justify-between gap-1.5 p-3!',
-        body: 'flex flex-1 p-0! overflow-auto',
-        footer: 'p-3!',
+        root: 'flex flex-col max-h-full shadow-md',
+        header: 'flex items-center justify-between gap-1.5 p-3! bg-elevated/50',
+        body: 'flex flex-initial max-h-full p-0! overflow-auto',
+        footer: 'flex-none h-6 p-0! bg-elevated/50',
       }"
     >
       <template #header>
@@ -526,6 +580,7 @@ const formRef = useTemplateRef('formRef')
 
       <UTable
         ref="table"
+        v-model:sorting="sorting"
         :data="data"
         :columns="columns"
         :loading="isLoading"
@@ -533,9 +588,9 @@ const formRef = useTemplateRef('formRef')
         loading-animation="carousel"
         sticky
         :ui="{
-          root: 'flex-1 overscroll-none',
-          base: 'h-full',
-          tbody: 'bg-elevated/50',
+          root: 'h-max flex-1 overscroll-none',
+          thead: 'bg-elevated/50',
+          tbody: 'my-table-tbody',
         }"
       />
 
