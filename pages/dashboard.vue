@@ -67,6 +67,10 @@ const cards = computed(() => [
 // ========== Calendar ==========
 const nowDate = new Date();
 const calendar = shallowRef( new CalendarDate( nowDate.getFullYear(), nowDate.getMonth() + 1, nowDate.getDate()) );
+function handleDateChange(newDate: CalendarDate) {
+  if (newDate === undefined) return
+  calendar.value = newDate;
+}
 const calendarData = computed<{ totals: { monthly: Record<string, number>; yearly: Record<string, number> }; totalSum: number }>(() => {
   if (!displayedSubscriptions.value) return { totals: { monthly: {}, yearly: {} }, totalSum: 0 }
   const monthly: Record<string, number> = {}
@@ -358,7 +362,9 @@ const onTouchEnd = (e: TouchEvent) => {
       }"
     >
       <UCalendar
-        v-model="calendar"
+        :model-value="calendar"
+        @update:model-value="handleDateChange"
+        variant="subtle"
         :month-controls="false"
         :year-controls="false"
         :ui="{
@@ -372,10 +378,11 @@ const onTouchEnd = (e: TouchEvent) => {
           gridWeekDaysRow: 'p-0 m-0 border-b border-default',
           headCell: 'm-0.5 py-1 text-default font-medium xl:text-xs lg:text-[12px] text-center mb-0',
           cell: 'size-full',
-          cellTrigger: 'size-full m-0 flex-col gap-y-1 rounded-none items-center justify-start px-2 py-1 cursor-pointer data-selected:font-semibold ' +
-          'hover:not-data-selected:text-primary text-muted xl:text-xs lg:text-[12px] ' +
-          'border border-transparent hover:not-data-selected:border-primary/50  ' +
-          'data-outside-view:opacity-20',
+          cellTrigger: 'size-full m-0 flex-col gap-y-1 rounded-none items-center justify-start px-2 py-1 cursor-pointer'
+          // cellTrigger: 'size-full m-0 flex-col gap-y-1 rounded-none items-center justify-start px-2 py-1 cursor-pointer data-selected:font-semibold ' +
+          // 'hover:not-data-selected:text-primary text-muted xl:text-xs lg:text-[12px] ' +
+          // 'border border-transparent hover:not-data-selected:border-primary/50  ' +
+          // 'data-outside-view:opacity-20',
         }"
       >
         <template #heading="{ value }">
@@ -511,94 +518,6 @@ const onTouchEnd = (e: TouchEvent) => {
             </VChart>
           </div>
         </ClientOnly>
-<!--        <UPopover-->
-<!--          arrow-->
-<!--          mode="hover"-->
-<!--          :ui="{-->
-<!--            content: 'flex flex-col items-center pointer-events-none rounded-lg px-4 py-1 ' +-->
-<!--            'bg-primary-900/70 ring-1 ring-primary backdrop-blur-xs',-->
-<!--            arrow: 'fill-primary'-->
-<!--          }"-->
-<!--          :dismissible="false"-->
-<!--          :reference="circleElement"-->
-<!--          :content="{ side: 'top', sideOffset: 6, updatePositionStrategy: 'always' }"-->
-<!--        >-->
-<!--          <VisXYContainer-->
-<!--            v-if="chartDataYear && chartDataYear.length"-->
-<!--            :svg-defs="svgDefs"-->
-<!--            class="size-full"-->
-<!--            height="100%"-->
-<!--            width="100%"-->
-<!--            :yDomain="yDomain"-->
-<!--            :data="chartDataYear"-->
-<!--            :style="{ '&#45;&#45;y-offset': smoothY + 'px' }"-->
-<!--          >-->
-<!--            <VisArea-->
-<!--              :x="(d: any) => d?.x"-->
-<!--              :y="(d: any) => d?.y"-->
-<!--              :line="true"-->
-<!--              lineColor="var(&#45;&#45;color-primary-500)"-->
-<!--              color="url(#gradient)"-->
-<!--            />-->
-<!--            <VisAxis-->
-<!--              type="y"-->
-<!--              :tickFormat="(value: any) => {-->
-<!--                return new Intl.NumberFormat(locale, {-->
-<!--                  style: 'currency',-->
-<!--                  currency: 'RUB',-->
-<!--                  minimumFractionDigits: 0,-->
-<!--                  maximumFractionDigits: 2,-->
-<!--                }).format(value)-->
-<!--              }"-->
-<!--              :numTicks="5"-->
-<!--              :domainLine="false"-->
-<!--              :tickLine="false"-->
-<!--              :tickPadding="12"-->
-<!--            />-->
-<!--            <VisAxis-->
-<!--              type="x"-->
-<!--              :tick-values="[0,1,2,3,4,5,6,7,8,9,10,11]"-->
-<!--              :tick-format="(d: any) => monthNames[d]"-->
-<!--              :gridLine="false"-->
-<!--              :domainLine="false"-->
-<!--              :tickLine="false"-->
-<!--              :tickPadding="12"-->
-<!--            />-->
-<!--            <VisCrosshair-->
-<!--              :template="(d: any) => {-->
-<!--                return new Intl.NumberFormat(locale, {-->
-<!--                  style: 'currency',-->
-<!--                  currency: 'RUB',-->
-<!--                  minimumFractionDigits: 0,-->
-<!--                  maximumFractionDigits: 2,-->
-<!--                }).format(d?.y)-->
-<!--              }"-->
-<!--              :getCircles="(x, data, yScale) => {-->
-<!--                if (!circleElement) updateCircleRefs()-->
-<!--                const closest = data.reduce((prev, curr) => {-->
-<!--                  return Math.abs(curr.x - x) < Math.abs(prev.x - x) ? curr : prev-->
-<!--                })-->
-<!--                yPixel = yScale(closest.y)-->
-<!--                month = monthNames[closest.x]-->
-<!--                sum = new Intl.NumberFormat(locale, {-->
-<!--                  style: 'currency',-->
-<!--                  currency: 'RUB',-->
-<!--                  minimumFractionDigits: 0,-->
-<!--                  maximumFractionDigits: 2,-->
-<!--                }).format(closest.y)-->
-
-<!--                return [{-->
-<!--                  y: yPixel,-->
-<!--                  color: 'var(&#45;&#45;background-color-default)'-->
-<!--                }]-->
-<!--              }"-->
-<!--            />-->
-<!--          </VisXYContainer>-->
-<!--          <template #content>-->
-<!--            <div class="text-sm/4 font-medium text-info">{{ month }}</div>-->
-<!--            <div class="font-medium text-info">{{ sum }}</div>-->
-<!--          </template>-->
-<!--        </UPopover>-->
       </template>
     </UPageCard>
   </UPageGrid>
